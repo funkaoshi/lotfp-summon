@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="Summons a monster using the LotFP Summon Spell so you don't have to.">
+        <meta name="author" content="Ramanan Sivaranjan">
+        <meta name="viewport" content="width=740, maximum-scale=1.0"/>
+
+        <title>The LotFP Summon Spell</title>
+
+        <link href='https://fonts.googleapis.com/css?family=Simonetta:400,900' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="/static/bootstrap.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/summon.css"/>
+
+        <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-2675737-18']);
+          _gaq.push(['_trackPageview']);
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        </script>
+    </head>
+
+    <body>
+    <div id="container">
+        <h1>
+            For use in the <a href="/">summoning</a> of demon and hell spawn
+            in the role playing game Lamentations of the Flame Princess.
+        </h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            <strong>Error!</strong> {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form id="small-summon-form" action="/" method="post" class="well form-inline">
+            <label for="level">Level</label>
+            <input id="level" class="input-small" type="text" name="level" value="{{ level }}" />
+            <label for="monster-hd">Hit Dice</label>
+            <input id="monster-hd" class="input-small" type="text" name="monster-hd" value="{{ monster_hd }}" />
+            <label for="bonuses">Bonuses</label>
+            <input id="bonuses" class="input-small" type="text" name="bonuses" value="{{ bonuses }}"/>
+            <button type="submit" class="btn btn-primary">Summon This Thing!</button>
+        </form>
+
+        <div class="results">
+        {% if result %}
+            {% if result.ignored %}
+                <h2>And there was great silence</h2>
+                <p>
+                    The demon world ignores your summon. Try summoning a lesser (hit-dice) demon.
+                </p>
+            {% else %}
+            <h2>{{ result.monster.form }} {% if not result.monster.is_abstract_form %}Demon{% endif %}</h2>
+                <p>
+                    {% if result.monster.is_abstract_form %}
+                        You fucked up. You have summoned <b>{{ result.monster.form }}</b>.  That's not going to be good.
+                    {% else %}
+                        You summoned a <b>{{ result.monster.form }}</b> demon{% if not result.monster.appendages %}.{% endif %}
+                        {% if result.monster.appendages %}
+                        with the following appendage{% if result.monster.appendages|count > 1%}s{% endif %}:
+                        {% for appendage in result.monster.appendages %}
+                        {{ appendage }}{% if not loop.last %},{% else %}.{% endif %}
+                        {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                </p>
+                {% if not result.monster.is_abstract_form %}
+                <p class="stat-block">
+                    <b>{{ result.monster.form }} Demon</b>:
+                    <a title="Armor class">AC</a> {{ result.monster.ac }},
+                    <a title="Movement rate in feet">MV</a> {{ result.monster.move }},
+                    <a title="Morale">ML</a> {{ result.monster.ml }},
+                    {{ result.monster.hd }} <a title="Hit Dice">HD</a> ({{ result.monster.hp }}hp),
+                    <a title="Number of attacks per round">#AT</a> {{ result.monster.attacks }} at
+                    {{ result.monster.damage }}D{{ result.monster.damage_die }}{% if result.monster.powers %},{% else %}.{% endif %}
+                    {% if result.monster.powers %}
+                        {% for power in result.monster.powers %}
+                        {{ power }}{% if not loop.last %},{% else %}.{% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </p>
+                <p class="domination">
+                    {% if result.domination.won %}<b>You</b> dominated the creature{% else %}<b>The Creature</b> dominated you{% endif %}
+                    by a <em>{{ result.domination.margin }}</em> margin.
+                    {% if result.domination.won %}<b>Nicely done.</b>{% else %}<b>God damn it.</b>{% endif %}
+                    {{ result.domination.domination|safe }}
+                </p>
+                {% endif %}
+                <p class="rolls">
+                    Your Save vs. Magic check ({{ result.save_roll }} vs. {{result.save }}) to determine how powerful a demon you could possibly summon was a {% if result.saved %}success{% else %}failure{% endif %}.
+                    {% if not result.monster.is_abstract_form %}
+                    Your domination check ({{ result.domination.caster }} vs. the creature's {{ result.domination.monster }}) was a {% if result.domination.won %}success{% else %}failure{% endif %}.
+                    {% endif %}
+                </p>
+
+            {% endif %}
+        {% else %}
+            <p>
+                You can use this page to go through the motions of casting the first
+                level Magic-User's spell <em>Summon</em>, as outlined on page 142 of
+                the <em>Rules and Magic</em> book of the role-playing game
+                <a href="https://lotfp.com"><em>Lamentations of the Flame
+                Princess</em></a>. Who thought letting first level characters cast
+                this spell was a good idea?
+            </p>
+        {% endif %}
+        </div>
+        <div class="footer">
+            <p>
+                A little web application by <a href="https://funkaoshi.com">Ramanan Sivaranjan</a>. If you are interested in playing LotFP checkout the <a href="https://www.lotfp.com/RPG/products/lotfp-weird-fantasy-role-playing">Grindhouse Edition</a> of the rules. <a href="https://save.vs.totalpartykill.ca/review/lotfp-grindhouse">My glowing review of the books</a> can be found on my D&amp;D website <a href="https://save.vs.totalpartykill.ca">Save vs. Total Party Kill</a>.</p>
+            <p>
+                Thanks to <a href="https://lotfp.blogspot.fi/">James Raggi</a> for creating <a href="https://lotfp.com/">Lamentations of the Flame Princess</a>, where the rules for this spell come from, <a href="https://unrested.deviantart.com">Scott Akerman</a> who created the illustrations on this site, and <a href="https://www.lotfp.com/RPG/discussion/user/804/">Glipkerio</a> of the <a href="https://www.lotfp.com/RPG/discussion/">LotFP forums</a> for creating the Excel version of this spell that was the original inspiration for this site, and for providing feedback and helping test.
+            </p>
+        </div>
+    </div>
+
+    <img src="/static/header-alt.png" class="footer-img pull-left">
+    <img src="/static/header-alt-right.png" class="footer-img pull-right">
+
+    <script src="https://code.jquery.com/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="/static/bootstrap-tooltip.js" type="text/javascript"></script>
+    <script src="/static/bootstrap-popover.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+          $('#level').popover({'placement': 'bottom', 'trigger': 'focus', 'title': "Level", 'content': "The Magic-User's level, a number from 1-20."});
+          $('#monster-hd').popover({'placement': 'bottom', 'trigger': 'focus', 'title': "Hit Dice", 'content': "The number of hit dice of the demon you are attempting to summon."});
+          $('#bonuses').popover({'placement': 'bottom', 'trigger': 'focus', 'title': "Bonuses", 'content': "Any bonuses the caster recieves from using a Thaumaturgic Circles or sacrificing people while casting the spell. These are applied to the domination check made once the demon is summoned."});
+          $('.stat-block a').tooltip();
+        });
+    </script>
+    </body>
+</html>

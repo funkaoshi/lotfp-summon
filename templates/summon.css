@@ -1,0 +1,45 @@
+body {
+    margin: 50px;
+}
+#container {
+    width: 640px;
+    margin: auto;
+}
+label.control-label {
+    font-weight: bold
+}
+#small-summon-form {
+    text-align: center;
+}
+#small-summon-form label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+#small-summon-form .input-small {
+    margin-right: 10px;
+    width: 36px;
+    text-align: center
+}
+#small-summon-form .btn {
+    margin-left: 20px;
+}
+.results, .alert, h1 {
+    margin: 0 auto;
+}
+.results, h1 {
+    width: 500px;
+    padding: 20px;
+    font-family: 'Simonetta', cursive;
+}
+.results {
+    font-size: 16px;
+    line-height: 1.5;
+}
+.stat-block {
+    padding: 10px;
+    border: 1px solid black;
+    width:460px;
+}
+.alert {
+    text-align: center;
+}
