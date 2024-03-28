@@ -9,7 +9,7 @@ COPY . /app
 
 RUN [ "pip", "install", "-r", "requirements.txt" ]
 
-EXPOSE 8000
+EXPOSE 8001
 
-CMD [ "gunicorn", "-w", "4", "--bind", "0.0.0.0:8000", "summon:app"]
+CMD [ "gunicorn", "-w", "4", "--bind", "0.0.0.0:8001", "summon:app"]
 
