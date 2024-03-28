@@ -24,9 +24,9 @@ class Monster(object):
         self.form = None
         self.powers = []
         self.appendages = []
-        self._get_monster_form(saved) # updates self.form, self.is_abstract_form
-        self._get_appendages()        # updates self.appendages
-        self._get_powers(saved)       # updates ac/move/ml/powers
+        self._get_monster_form(saved)  # updates self.form, self.is_abstract_form
+        self._get_appendages()  # updates self.appendages
+        self._get_powers(saved)  # updates ac/move/ml/powers
         self.hp = d(6) + sum(d(6) for i in range(self.hd))
 
     @property
@@ -63,9 +63,11 @@ class Monster(object):
         else:
             self.is_abstract_form = True
             form = random.choice(tables.ABSTRACT_FORM)
-        self.form = form['name']
+
+        self.form = form["name"]
+
         # some forms include additional powers
-        for p in form['powers']:
+        for p in form["powers"]:
             self.powers.append(p)
 
     def _get_appendages(self):
@@ -106,16 +108,18 @@ class Monster(object):
             previous = roll
             self.original_powers_count = self.original_powers_count + 1
             self.powers.append(random.choice(tables.POWERS))
+
         # Process this list of powers. We will remove powers that modify
         # stats, and simply update the monsters stats. (This is why we
         # store the original power count, as that is used in domination
         # checks.)
-        powers = set(self.powers) # copy & convert to set to remove duplicates
+        powers = set(self.powers)  # copy & convert to set to remove duplicates
         self.powers = []
         for power in powers:
             power = self._parse_power(power)
             if power:
                 self.powers.append(power)
+
         self.powers = list(set(self.powers))
 
     def _parse_power(self, power):
@@ -163,4 +167,3 @@ class Monster(object):
             return 10
         else:
             return 12
-
