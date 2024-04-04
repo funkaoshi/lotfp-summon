@@ -53,7 +53,7 @@ def get_domination_result(level, bonuses, monster):
         domination = f"This thing is here and it's angry. You're going to have to deal with it trying to kill you for {rounds} rounds."
     elif result > -19 or result > 2 * monster.domination_margin:
         margin = "great"
-        domination = "I can tell you, it's not going to be good. <blockquote><p>{random.choice(tables.DOMINATION_FAILURES)}</p></blockquote>"
+        domination = f"I can tell you, it's not going to be good. <blockquote><p>{random.choice(tables.DOMINATION_FAILURES)}</p></blockquote>"
     else:
         margin = "massive"
         if d(20) == 20:
