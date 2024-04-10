@@ -8,4 +8,4 @@ push:
 	docker push funkaoshi/lotfp-summon:latest
 
 deploy:
-	ssh ubuntu@oci.vqvz.com "cd oracle_free_vm/docker && docker-compose pull && docker-compose restart funkaoshi-lotfp-summon"
+	ssh ubuntu@oci.vqvz.com "cd oracle_free_vm/docker && docker-compose stop funkaoshi-lotfp-summon && docker-compose pull && docker-compose up --force-recreate -d funkaoshi-lotfp-summon"
